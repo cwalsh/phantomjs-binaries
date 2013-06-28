@@ -6,8 +6,12 @@ include Sys
 $:.push File.expand_path("../../lib", __FILE__)
 require "phantomjs-binaries/version"
 
-machine  = Uname.machine
-platform = Uname.sysname.downcase
-version  = Phantomjs::Binaries::PHANTOM_VERSION
-platform_binary = File.expand_path(File.join(File.dirname(__FILE__), "phantomjs-#{version}-#{platform}-#{machine}"))
+if RbConfig::CONFIG['host_os'] =~ /win32|mingw|cygwin|dos|windows/i
+  platform_binary = File.expand_path(File.join(File.dirname(__FILE__), "phantomjs.exe"))
+else
+  machine  = Uname.machine
+  platform = Uname.sysname.downcase
+  version  = Phantomjs::Binaries::PHANTOM_VERSION
+  platform_binary = File.expand_path(File.join(File.dirname(__FILE__), "phantomjs-#{version}-#{platform}-#{machine}"))
+end
 exec platform_binary, *ARGV
